@@ -237,7 +237,7 @@
 					<?= anchor('admin/constructions', '<i class="gi gi-restart sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Retur</span>', array('class' => '')); ?>
 				</li> -->
 
-				<li class="sidebar-header" style="background-color:grey;">
+				<li class="sidebar-header">
 					<span class="sidebar-header-options clearfix"><a href="javascript:void(0)" data-toggle="tooltip" title="Keuangan"><i class="gi gi-money"></i></a></span>
 					<span class="sidebar-header-title">KEUNGAN</span>
 				</li>
