@@ -83,152 +83,84 @@
 				<li>
 					<?= anchor('admin/dashboard', '<i class="gi gi-stopwatch sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Dashboard</span>', array('class' => $active_dashboard)); ?>
 				</li>
-				
-				
-				<li class="sidebar-header" style="background-color:grey;">
-					<span class="sidebar-header-options clearfix"><a href="javascript:void(0)" data-toggle="tooltip" title="Database"><i class="fa fa-database"></i></a></span>
-					<span class="sidebar-header-title"><b>MASTER DATA</b></span>
+
+				<li class="<?= $active_pesanan; ?>">
+					<a href="#" class="sidebar-nav-menu <?= $active_pesanan; ?>">
+						<i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+						<i class="gi gi-envelope sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Surat Pesanan</span>
+					</a>
+					<ul>
+						<li><?= anchor('admin/pesanan', '<i class="gi gi-book_open sidebar-nav-icon"></i> Buku'); ?></li>
+						<li><?= anchor('admin/pesanan/non_buku', '<i class="gi gi-macbook sidebar-nav-icon"></i> Non-Buku'); ?></li>
+					</ul>
 				</li>
-				<?php
-					if(($idPengguna=='A00001')|| $idPengguna=='A00012'){
-						?>
-							<li class="<?= $active_master; ?>">
-								<a href="#" class="sidebar-nav-menu <?= $active_master; ?>">
-									<i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
-									<i class="gi gi-shopping_bag sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Master Data</span>
-								</a>
-								<ul>
-									<li><?= anchor('admin/master/profil_perusahaan', 'Profil Perusahaan', array('class' => '')); ?></li>
-									
-									<li><?= anchor('#', 'Assets', array('class' => '')); ?></li>
-									<li><?= anchor('admin/master/akun', 'Akun', array('class' => '')); ?></li>
-									<li><?= anchor('#', 'Jenjang', array('class' => '')); ?></li>
-									<li><?= anchor('admin/master/wilayah', 'Wilayah Kerja', array('class' => '')); ?></li>
-									<li><?= anchor('admin/master/pengguna', 'Karyawan', array('class' => '')); ?></li>
-									<li><?= anchor('admin/master/marketing', 'Marketing', array('class' => '')); ?></li>
-									<li><?= anchor('admin/master/jabatan', 'Jabatan', array('class' => '')); ?></li>
-									<li><?= anchor('admin/master/barang', 'Barang', array('class' => '')); ?></li>
-									<li><?= anchor('admin/master/kategori', 'Kategori Barang', array('class' => '')); ?></li>
-									<li><?= anchor('admin/master/sub_kategori', 'Sub Kategori Barang', array('class' => '')); ?></li>
-									<li><?= anchor('admin/master/satuan', 'Satuan', array('class' => '')); ?></li>
-									<li><?= anchor('admin/master/lembaga', 'Lembaga', array('class' => '')); ?></li>
-									<li><?= anchor('admin/master/pelanggan', 'Pelanggan', array('class' => '')); ?></li>
-									<li><?= anchor('admin/master/vendor', 'Supplier', array('class' => '')); ?></li>
-									<li><?= anchor('admin/master/vendor_klasifikasi', 'Klasifikasi Supplier', array('class' => '')); ?></li>
-									<li><?= anchor('admin/master/marketing_supplier', 'Marketing Supplier', array('class' => '')); ?></li>
-									<li><?= anchor('admin/master/gudang', 'Lokasi Gudang', array('class' => '')); ?></li>
-									<li><?= anchor('admin/master/mitra', 'Mitra', array('class' => '')); ?></li>
-									<li><?= anchor('admin/master/pelaksana', 'Perusahaan Pelaksana', array('class' => '')); ?></li>
-									<li><?= anchor('admin/master/sumber_dana', 'Sumber Dana', array('class' => '')); ?></li>
-								</ul>
-							</li>						
-						<?php
-					}
-				?>
-				
-				<li class="sidebar-header" style="background-color:grey;">
-					<span class="sidebar-header-options clearfix"><a href="javascript:void(0)" data-toggle="tooltip" title="Keuangan"><i class="gi gi-money"></i></a></span>
-					<span class="sidebar-header-title"><b>TRANSAKSI</b></span>
-					
-					<li class="<?= $active_pesanan; ?>">
-						<a href="#" class="sidebar-nav-menu <?= $active_pesanan; ?>">
-							<i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
-							<i class="gi gi-envelope sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Surat Pesanan</span>
-						</a>
-						<ul>
-							<li><?= anchor('admin/pesanan', '<i class="gi gi-book_open sidebar-nav-icon"></i> Buku'); ?></li>
-							<li><?= anchor('admin/pesanan/non_buku', '<i class="gi gi-macbook sidebar-nav-icon"></i> Non-Buku'); ?></li>
-						</ul>
-					</li>
-					
-					<li>
-						<?= anchor('admin/packing', '<i class="gi gi-package sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Packing</span>', array('class' => $active_packing)); ?>
-					</li>
-					
-					<li class="<?= $active_order; ?>">
-						<?= anchor('admin/order/daftar/daftar-delivery-order', '<i class="gi gi-truck sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Delivery Order</span>', array('class' => $active_do)); ?>
-					</li>
-					
-					<li class="<?= $active_so; ?>">
-						<a href="#" class="sidebar-nav-menu <?= $active_so; ?>">
-							<i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
-							<i class="fa fa-hourglass-o sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Standing Order (SO)</span>
-						</a>
-						<ul>
-							<li><?= anchor('admin/standing_order/daftar_so_pelanggan', 'SO Pelanggan'); ?></li>
-							<li><?= anchor('admin/standing_order/daftar_so_vendor', 'SO Supplier'); ?></li>
-							<li><?= anchor('admin/standing_order/daftar_so_barang', 'SO Produk'); ?></li>
-						</ul>
-					</li>
-					
-					<li class="<?= $active_pembelian; ?>">
-						<a href="#" class="sidebar-nav-menu <?= $active_pembelian; ?>">
-							<i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
-							<i class="fa fa-clipboard sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Surat Pembelian</span>
-						</a>
-						<ul>
-							<li><?= anchor('admin/pembelian', 'Daftar Pembelian'); ?></li>
-							<li><?= anchor('admin/pembelian/form_stok', 'Pembelian Stok'); ?></li>
-							<li><?= anchor('admin/pembelian/so', 'Pembelian SO'); ?></li>
-						</ul>
-					</li>
-					
-					<li class="<?= $active_penerimaan; ?>">
-						<a href="#" class="sidebar-nav-menu <?= $active_penerimaan; ?>">
-							<i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
-							<i class="gi gi-inbox_in sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Penerimaan Barang</span>
-						</a>
-						<ul>
-							<li><?= anchor('admin/penerimaan/pembelian', 'Daftar Pembelian'); ?></li>
-							<li><?= anchor('admin/penerimaan/daftar', 'Daftar Penerimaan'); ?></li>
-							<li><?= anchor('admin/gudang/barang_masuk', 'Penerimaan Retur Pembelian', array('class' => '')); ?></li>
-						</ul>
-					</li>
-					
-					<li class="<?= $retur_barang; ?>">
-						<a href="#" class="sidebar-nav-menu <?= $retur_barang; ?>">
-							<i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
-							<i class="fa fa-retweet sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Retur Barang</span>
-						</a>
-						<ul>
-							<li><?= anchor('admin/retur_barang/retur_pembelian', 'Retur Pembelian'); ?></li>
-							<li><?= anchor('admin/retur_barang/retur_penjualan', 'Retur Penjualan'); ?></li>
-						</ul>
-					</li>
-					
-					<li class="<?= $surat_jalan; ?>">
-						<a href="#" class="sidebar-nav-menu <?= $surat_jalan; ?>">
-							<i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
-							<i class="fa fa-external-link sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Surat Jalan</span>
-						</a>
-						<ul>
-							<li><?= anchor('admin/surat_jalan', 'Daftar Surat Jalan'); ?></li>
-							<li><?= anchor('admin/surat_jalan/penerimaan/form-penerimaan-do', 'Penerimaan DO'); ?></li>
-							<li><?= anchor('admin/surat_jalan/terkirim/laporan-do-terkirim', 'Laporan DO Terkirim'); ?></li>
-						</ul>
-					</li>
-					
+
+				<li>
+					<?= anchor('admin/packing', '<i class="gi gi-package sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Packing</span>', array('class' => $active_packing)); ?>
+				</li>
+
+				<li class="<?= $active_order; ?>">
+					<?= anchor('admin/order/daftar/daftar-delivery-order', '<i class="gi gi-truck sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Delivery Order</span>', array('class' => $active_do)); ?>
+				</li>
+
+				<li class="<?= $surat_jalan; ?>">
+					<a href="#" class="sidebar-nav-menu <?= $surat_jalan; ?>">
+						<i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+						<i class="fa fa-external-link sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Surat Jalan</span>
+					</a>
+					<ul>
+						<li><?= anchor('admin/surat_jalan', 'Daftar Surat Jalan'); ?></li>
+						<li><?= anchor('admin/surat_jalan/penerimaan/form-penerimaan-do', 'Penerimaan DO'); ?></li>
+						<li><?= anchor('admin/surat_jalan/terkirim/laporan-do-terkirim', 'Laporan DO Terkirim'); ?></li>
+					</ul>
+				</li>
+
+				<li class="<?= $active_pembelian; ?>">
+					<a href="#" class="sidebar-nav-menu <?= $active_pembelian; ?>">
+						<i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+						<i class="fa fa-clipboard sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Surat Pembelian</span>
+					</a>
+					<ul>
+						<li><?= anchor('admin/pembelian', 'Daftar Pembelian'); ?></li>
+						<li><?= anchor('admin/pembelian/form_stok', 'Pembelian Stok'); ?></li>
+						<li><?= anchor('admin/pembelian/so', 'Pembelian SO'); ?></li>
+					</ul>
+				</li>
+
+				<li class="<?= $active_so; ?>">
+					<a href="#" class="sidebar-nav-menu <?= $active_so; ?>">
+						<i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+						<i class="fa fa-hourglass-o sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Standing Order (SO)</span>
+					</a>
+					<ul>
+						<li><?= anchor('admin/standing_order/daftar_so_pelanggan', 'SO Pelanggan'); ?></li>
+						<li><?= anchor('admin/standing_order/daftar_so_vendor', 'SO Supplier'); ?></li>
+						<li><?= anchor('admin/standing_order/daftar_so_barang', 'SO Produk'); ?></li>
+					</ul>
+				</li>
+
+				<li class="<?= $active_penerimaan; ?>">
+					<a href="#" class="sidebar-nav-menu <?= $active_penerimaan; ?>">
+						<i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+						<i class="gi gi-inbox_in sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Penerimaan Barang</span>
+					</a>
+					<ul>
+						<li><?= anchor('admin/penerimaan/pembelian', 'Daftar Pembelian'); ?></li>
+						<li><?= anchor('admin/penerimaan/daftar', 'Daftar Penerimaan'); ?></li>
+						<li><?= anchor('admin/gudang/barang_masuk', 'Penerimaan Retur Pembelian', array('class' => '')); ?></li>
+					</ul>
 				</li>
 				
-				<li class="sidebar-header" style="background-color:grey;">
-					<span class="sidebar-header-options clearfix"><a href="javascript:void(0)" data-toggle="tooltip" title="Stok"><i class="gi gi-settings"></i></a></span>
-					<span class="sidebar-header-title">GUDANG/STOCK</span>
-					
-					<li class="<?= $active_pengaturan; ?>">
-						<a href="#" class="sidebar-nav-menu <?= $active_pengaturan; ?>">
-							<i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
-							<i class="gi gi-package sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Stok Gudang</span>
-						</a>
-						<ul>
-							<li><?= anchor('admin/gudang/stok_barang', 'Stok Barang', array('class' => '')); ?></li>
-							<li><?= anchor('admin/gudang/stok_opname', 'Stok Opname', array('class' => '')); ?></li>
-						</ul>
-					</li>
-					
+				<li class="<?= $retur_barang; ?>">
+					<a href="#" class="sidebar-nav-menu <?= $retur_barang; ?>">
+						<i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+						<i class="fa fa-retweet sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Retur Barang</span>
+					</a>
+					<ul>
+						<li><?= anchor('admin/retur_barang/retur_pembelian', 'Retur Pembelian'); ?></li>
+						<li><?= anchor('admin/retur_barang/retur_penjualan', 'Retur Penjualan'); ?></li>
+					</ul>
 				</li>
-				
-				
-				
 
 				<!-- <li>
 					<?= anchor('admin/constructions', '<i class="gi gi-folder_lock sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Rekap Pengiriman</span>', array('class' => '')); ?>
@@ -237,7 +169,7 @@
 					<?= anchor('admin/constructions', '<i class="gi gi-restart sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Retur</span>', array('class' => '')); ?>
 				</li> -->
 
-				<li class="sidebar-header" style="background-color:grey;">
+				<li class="sidebar-header">
 					<span class="sidebar-header-options clearfix"><a href="javascript:void(0)" data-toggle="tooltip" title="Keuangan"><i class="gi gi-money"></i></a></span>
 					<span class="sidebar-header-title">KEUNGAN</span>
 				</li>
@@ -276,6 +208,62 @@
 				</li>
 				</li> -->
 
+				<li class="sidebar-header">
+					<span class="sidebar-header-options clearfix"><a href="javascript:void(0)" data-toggle="tooltip" title="Stok"><i class="gi gi-settings"></i></a></span>
+					<span class="sidebar-header-title">STOK</span>
+				</li>
+
+				<li class="<?= $active_pengaturan; ?>">
+					<a href="#" class="sidebar-nav-menu <?= $active_pengaturan; ?>">
+						<i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+						<i class="gi gi-package sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Stok Gudang</span>
+					</a>
+					<ul>
+						<li><?= anchor('admin/gudang/stok_barang', 'Stok Barang', array('class' => '')); ?></li>
+						<li><?= anchor('admin/gudang/stok_opname', 'Stok Opname', array('class' => '')); ?></li>
+					</ul>
+				</li>
+
+
+
+				<li class="sidebar-header">
+					<span class="sidebar-header-options clearfix"><a href="javascript:void(0)" data-toggle="tooltip" title="Database"><i class="fa fa-database"></i></a></span>
+					<span class="sidebar-header-title">Database</span>
+				</li>
+
+				<?php
+					if(($idPengguna=='A00001')|| $idPengguna=='A00012'){
+						?>
+							<li class="<?= $active_master; ?>">
+								<a href="#" class="sidebar-nav-menu <?= $active_master; ?>">
+									<i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+									<i class="gi gi-shopping_bag sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Master Data</span>
+								</a>
+								<ul>
+									<li><?= anchor('admin/master/barang', 'Barang', array('class' => '')); ?></li>
+									<li><?= anchor('admin/master/kategori', 'Kategori Barang', array('class' => '')); ?></li>
+									<li><?= anchor('admin/master/sub_kategori', 'Sub Kategori Barang', array('class' => '')); ?></li>
+									<li><?= anchor('admin/master/satuan', 'Satuan', array('class' => '')); ?></li>
+									<li><?= anchor('admin/master/pelanggan', 'Pelanggan', array('class' => '')); ?></li>
+									<li><?= anchor('admin/master/mitra', 'Mitra', array('class' => '')); ?></li>
+									<li><?= anchor('admin/master/lembaga', 'Lembaga', array('class' => '')); ?></li>
+									<li><?= anchor('admin/master/vendor', 'Supplier', array('class' => '')); ?></li>
+									<li><?= anchor('admin/master/marketing_supplier', 'Marketing Supplier', array('class' => '')); ?></li>
+									<li><?= anchor('admin/master/vendor_klasifikasi', 'Klasifikasi Supplier', array('class' => '')); ?></li>
+									<li><?= anchor('admin/master/gudang', 'Lokasi Gudang', array('class' => '')); ?></li>
+									<li><?= anchor('admin/master/marketing', 'Marketing', array('class' => '')); ?></li>
+									<li><?= anchor('admin/master/pelaksana', 'Perusahaan Pelaksana', array('class' => '')); ?></li>
+									<li><?= anchor('admin/master/pengguna', 'Karyawan', array('class' => '')); ?></li>
+									<li><?= anchor('admin/master/jabatan', 'Jabatan', array('class' => '')); ?></li>
+									<li><?= anchor('admin/master/sumber_dana', 'Sumber Dana', array('class' => '')); ?></li>
+									<li><?= anchor('admin/master/wilayah', 'Wilayah Kerja', array('class' => '')); ?></li>
+									<li><?= anchor('admin/master/akun', 'Akun', array('class' => '')); ?></li>
+									<li><?= anchor('admin/master/profil_perusahaan', 'Profil Perusahaan', array('class' => '')); ?></li>
+								</ul>
+							</li>						
+						<?php
+					}
+				?>
 			</ul>
 			<!-- END Sidebar Navigation -->
 		</div>
