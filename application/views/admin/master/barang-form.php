@@ -225,30 +225,79 @@
 		$('#harga_jual').val(to_rupiah(nominal));
 	});
 
-	//cek existing kode barang
-	$(document).on('blur', '#kode_barang', function(e) {
-		let id_barang = e.target.value;
-		$.ajax({
-			url: "<?php echo site_url('admin/master/barang/cek_kode_barang') ?>",
-			type: "POST",
-			cache: false,
-			data: 'id_barang=' + id_barang,
-			dataType: 'json',
-			success: function(json) {
-				if (json.status == 1) {
-					$("#kode_barang").val("");
-					$('.modal-dialog').removeClass('modal-lg');
-					$('.modal-dialog').addClass('modal-sm');
-					$('#ModalHeader').html('Oops !');
-					$('#ModalContent').html('Maaf, Kode Barang sudah digunakan');
-					$('#ModalContent').css({
-						"color": "red",
-					});
-					$('#ModalFooter').html("<button type='button' class='btn btn-primary' data-dismiss='modal' autofocus>Ok</button>");
-					$('#ModalGue').modal('show');
 
-				}
+    $(document).ready(function(){
+		$("#vendor").on('change', function () 
+        {
+            let id_supplier = $(this).find(":selected").val();  
+			let kode_barang = $('#kode_barang').val();
+
+			if(kode_barang==''){
+				$("#kode_barang").val("");
+				$('#vendor').val('');
+				$('.modal-dialog').removeClass('modal-lg');
+				$('.modal-dialog').addClass('modal-sm');
+				$('#ModalHeader').html('Oops !');
+				$('#ModalContent').html('Silahkan isi kode barang terlebih dahulu');
+				$('#ModalContent').css({
+					"color": "red",
+				});
+				$('#ModalFooter').html("<button type='button' class='btn btn-primary' data-dismiss='modal' autofocus>Ok</button>");
+				$('#ModalGue').modal('show');				
+			}else{
+
+				$.ajax({
+					url: "<?php echo site_url('admin/master/barang/cek_supplier_barang') ?>",
+					type: "POST",
+					cache: false,
+					data: 'kode_barang=' + kode_barang + '&id_supplier=' + id_supplier,
+					dataType: 'json',
+					success: function(json) {
+						if (json.status == 1) {
+							$("#kode_barang").val("");
+							$('#vendor').val('').trigger('change');
+							$('.modal-dialog').removeClass('modal-lg');
+							$('.modal-dialog').addClass('modal-sm');
+							$('#ModalHeader').html('Oops !');
+							$('#ModalContent').html('Maaf, Kode Barang untuk supplier yang dipilih sudah digunakan.  Hanya boleh terdapat Kode barang yang sama dengan supplier yang berbeda!');
+							$('#ModalContent').css({
+								"color": "red",
+							});
+							$('#ModalFooter').html("<button type='button' id='resetSupplier' class='btn btn-primary' data-dismiss='modal' autofocus>Ok</button>");
+							$('#ModalGue').modal('show');
+
+						}
+					}
+				})
 			}
-		});
-	})
+		})		
+	});
+
+
+	//cek existing kode barang
+	// $(document).on('blur', '#kode_barang', function(e) {
+	// 	let id_barang = e.target.value;
+	// 	$.ajax({
+	// 		url: "<?php echo site_url('admin/master/barang/cek_kode_barang') ?>",
+	// 		type: "POST",
+	// 		cache: false,
+	// 		data: 'id_barang=' + id_barang,
+	// 		dataType: 'json',
+	// 		success: function(json) {
+	// 			if (json.status == 1) {
+	// 				$("#kode_barang").val("");
+	// 				$('.modal-dialog').removeClass('modal-lg');
+	// 				$('.modal-dialog').addClass('modal-sm');
+	// 				$('#ModalHeader').html('Oops !');
+	// 				$('#ModalContent').html('Maaf, Kode Barang sudah digunakan');
+	// 				$('#ModalContent').css({
+	// 					"color": "red",
+	// 				});
+	// 				$('#ModalFooter').html("<button type='button' class='btn btn-primary' data-dismiss='modal' autofocus>Ok</button>");
+	// 				$('#ModalGue').modal('show');
+
+	// 			}
+	// 		}
+	// 	});
+	// })
 </script>

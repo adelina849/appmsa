@@ -118,6 +118,7 @@
                             <td class="text-light">LEMBAGA</td>
                             <td class="text-light" style="width: 10%;">JENJANG</td>
                             <td class="text-light" style="width: 10%;">STATUS</td>
+                            <td class="text-light" style="width: 10%;">PEMBAYARAN</td>
                             <td class="text-light" style="width: 15%;">NILAI FAKTUR (Rp.)</td>
                             <td class="text-light" style="width: 10%;">NILAI SP (Rp.)</td>
                             <td class="text-center no-sort text-light" style="width: 5%;"><i class="fa fa-cog"></i></td>
@@ -265,6 +266,7 @@
                 { "mData": "lembaga" },
                 { "mData": "jenjang" },
                 { "mData": "status" },
+                { "mData": "pembayaran" },
                 { "mData": "nilai_do" },
                 { "mData": "nilai_sp" },
                 { "mData": "aksi" }

@@ -42,6 +42,8 @@
                             <td class="text-light" style="width: 15%;">NOMOR PENERIMAAN</td>
                             <td class="text-light" style="width: 15%;">NOMOR PEMBELIAN</td>
                             <td class="text-light" style="width: 25%;">SUPPLIER</td>
+                            <td class="text-light" style="width: 15%;">SISTEM PEMBAYARAN</td>
+                            <td class="text-light" style="width: 15%;">TANGGAL JATUH TEMPO</td>
                             <td class="text-light" style="width: 20%;">NILAI TOTAL</td>
                             <td class="text-center no-sort text-light" style="width: 15%;"><i class="fa fa-cog"></i></td>
                         </tr>
@@ -128,6 +130,8 @@
                 { "mData": "nomor" },
                 { "mData": "nomor_pembelian" },
                 { "mData": "supplier" },
+                { "mData": "sistem_pembayaran" },
+                { "mData": "jatuh_tempo" },
                 { "mData": "total" },
                 { "mData": "aksi" }
             ]

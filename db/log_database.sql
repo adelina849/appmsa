@@ -1,2 +1,0 @@
--- ADE (2023-10-07)
-	-- Import database ke local

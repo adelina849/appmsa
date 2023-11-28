@@ -333,8 +333,6 @@ class Retur_barang extends Auth_Controller
 	} //END LEVEL ADMIN
 
 
-
-
 	public function all_retur_pembelian()
 	{
 		$retur_bulan_ini = $this->input->post('retur_bulan_ini');
@@ -391,7 +389,7 @@ class Retur_barang extends Auth_Controller
 									<i class="fa fa-print text-info"></i>
 								</button>
 								<button onclick="print(' . $data->id . ')" 
-									class="btn btn-alt btn-default btn-xs text-mutted" data-toggle="tooltip" title="Cetak Retur Pembelian">
+									class="btn btn-alt btn-default btn-xs text-mutted" data-toggle="tooltip" title="Hapus Retur Pembelian">
 									<i class="fa fa-trash text-mutted"></i>
 								</button>
 
@@ -407,6 +405,11 @@ class Retur_barang extends Auth_Controller
 
 	public function print_retur_pembelian($id_retur)
 	{
+
+
+		// $qReturMaster = $this->db->get_where('retur_barang_pembelian_master', array('id' => $id_retur))->result();
+		// $qMarketing = $this->db->get_where('marketing_supplier', array('id' => isset($qReturMaster[0]->id_marketing) ? $qReturMaster[0]->id_marketing : 0))->result();
+		// $qVendor = $this->db->get_where('vendor', array('id' => isset($qReturMaster[0]->id_supplier) ? $qReturMaster[0]->id_supplier : 0))->result();
 
 		$qReturMaster = $this->db->get_where('retur_barang_pembelian_master', array('id' => $id_retur))->result();
 		$qMarketing = $this->db->get_where('marketing_supplier', array('id' => isset($qReturMaster[0]->id_marketing) ? $qReturMaster[0]->id_marketing : 0))->result();

@@ -1,3 +1,5 @@
+<link href="<?php echo base_url('assets/plugins/datatables/css/jquery.dataTables.min.css') ?>" rel="stylesheet">
+
 <div class="block full">
     <!-- All Orders Title -->
     <div class="block-title">
@@ -168,7 +170,7 @@
             <div class="table-responsive">
                 <input type="hidden" name="id_sp" value="<?= $id_pesanan; ?>">
                 <input type="hidden" name="nomor_sp" value="<?= $sp[0]->nomor_sp; ?>">
-                <table id="example-datatable" class="table table-vcenter table-condensed table-bordered">
+                <table id="packing" class="a table table-vcenter table-condensed table-bordered">
                     <thead>
                         <tr style="font-weight: bold;" class="themed-border themed-background text-light">
                             <td class="text-center" style="width: 2%;">NO</td>
@@ -247,7 +249,7 @@
                                     <div class="input-group">
                                         <input type="hidden" id='qty' name='qty<?= $i; ?>' value='<?= $qty; ?>'>
                                         <input type="hidden" id='stokBarang' name='stokBarang<?= $i;?>' value='<?= $stok_barang; ?>'>
-                                        <input type="text" id="tersedia" name="tersedia<?= $i; ?>" value="<?= $qty_tersedia; ?>" class="form-control text-center stokTersedia" placeholder='0' onkeypress='return check_int(event)' required>
+                                        <input type="text" id="tersedia" name="tersedia[<?= $i; ?>]" value="<?= $qty_tersedia; ?>" class="form-control text-center stokTersedia" placeholder='0' onkeypress='return check_int(event)' required>
                                         <span class="input-group-addon text-primary" style="font-weight: bold;">
                                             <?= isset($barang[0]->total_stok) ? $barang[0]->total_stok : ''; ?>
                                         </span>
@@ -283,13 +285,16 @@
     <?= form_close(); ?>
 
     <?php
-    $Qpacking = $this->db->order_by('tanggal_packing', 'ASC')->get_where('packing_master', array('id_pesanan_m' => $id_pesanan))->result();
+    $q = $this->db->order_by('id_packing_m', 'DESC')->get_where('packing_master', array('id_pesanan_m' => $id_pesanan));
+    $Qpacking = $q->result();
+    $jumlah_packingan = $q->num_rows();
+
     $doKe = $tab = 0;
     foreach ($Qpacking as $pm) { // packing master
         $tab+=1;
     ?>
         <h4 class="sub-header">
-            <strong><i class="gi gi-package"></i> PACKING KE <?= '('.++$doKe.')'; ?></strong>
+            <strong><i class="gi gi-package"></i> PACKING KE <?= '('.$jumlah_packingan--.')'; ?></strong>
             <span class="pull-right"><i class="fa fa-calendar"></i> <?= $this->tanggal->konversi($pm->tanggal_packing); ?></span>
         </h4>
         <div class="row" style="padding: 0px 15px 0px 15px;">
@@ -334,10 +339,28 @@
                                 <?php //echo $tombol_print;?> 
                             </div>
 
-                            <button onclick="print_packing(<?=$id_pesanan.','.$pm->id_packing_m;?>);" 
-                            class="btn btn-sm btn-alt btn-danger pull-right" data-toggle="tooltip" title="Cetak Form Packing" style="margin: 0px 15px 0px 15px;">
-                                <i class="gi gi-print"></i> Cetak Form Paking
-                            </button>
+                            <div class="btn-group btn-group-sm pull-right">
+                                    <?php
+                                        $cetak = $pm->cetak;
+                                        $pernah_cetak = 'Belum Dicetak';
+                                        $class_cetak = 'text-muted';
+                                        if($cetak==1){
+                                            $pernah_cetak='Sudah Dicetak';
+                                            $class_cetak = 'text-success';
+                                        }
+                                    ?>
+                                    
+                                <button onclick="#" 
+                                class="btn btn-sm btn-alt btn-default" data-toggle="tooltip" title="Sudah pernah di cetak" style="margin: 0px 1px 0px 0px;">
+                                    <span class="<?=$class_cetak;?>"><i class="fa fa-check"></i> <?=$pernah_cetak;?></span>
+                                </button>
+
+                                <button onclick="pernah_cetak(<?=$id_pesanan.','.$pm->id_packing_m.','.$cetak;?>);" 
+                                class="btn btn-sm btn-alt btn-default" data-toggle="tooltip" title="Cetak Form Packing" style="margin: 0px 15px 0px 0px;">
+                                    <span class="text-danger"><i class="gi gi-print"></i> Cetak Form Paking</span>
+                                </button>        
+
+                            </div>
 
                             <div class='col-lg-12' style="margin-bottom: 5px;">
                                 <div class="table-responsive">
@@ -511,18 +534,33 @@
 <!-- END Modal Validasi-->
 
 <script src="<?php echo base_url(); ?>assets/proui/js/vendor/jquery.min.js"></script>
+<script src="<?php echo base_url('assets/plugins/datatables/js/jquery.dataTables.min.js') ?>"></script>
 
 <script>
+
+
+    $(document).ready(function() {
+
+        $('#packing').dataTable( {               
+            "iDisplayLength": -1,
+            "lengthChange": false,
+            "paging": false
+        } );
+        $('body').tooltip({
+            selector: '[data-toggle="tooltip"]'
+        });
+    });
+
     $(document).ready(function() {
 
         //let sks = $(this).find('[name="sks"]').val();
-        $("#example-datatable tbody tr").on('keyup', function() {
+        $("#packing tbody tr").on('keyup', function() {
             //var huruf = $(this).find(":selected").val();
             let nomorId = $(this).find('[name="no_id"]').val();
             let jumlahBeli = $(this).find('[name="jumlahBeli"]').val();
             let stokBarang = $(this).find('[name="stokBarang' + nomorId + '"]').val();
-            let tersedia = $(this).find('[name="tersedia' + nomorId + '"]').val();
             let qty = $(this).find('[name="qty' + nomorId + '"]').val();
+            let tersedia = $(this).find('[name="tersedia[' + nomorId + ']"]').val();
 
             let sisa = parseInt(qty) - parseInt(tersedia);
             if (tersedia == '') {
@@ -580,6 +618,18 @@
             .appendTo("body");                    // add iframe to the DOM to cause it to load the page
     }   
     
+    function pernah_cetak(id_pesanan, id_packing_m, pernah_cetak){
+        if(pernah_cetak==1){
+            var result = confirm("Data packing ini sudah pernah di cetak!. Lanjut Cetak ?");
+            if (result == true) {
+                print_packing(id_pesanan, id_packing_m)
+            } 
+        }
+        else{
+            print_packing(id_pesanan, id_packing_m)
+        }
+    }
+
     function print_packing(id_pesanan, id_packing_m) {
     //.attr("src", "/url/to/page/to/print")     
         $("<iframe>")                             // create a new iframe element

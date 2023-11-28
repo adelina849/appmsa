@@ -57,12 +57,13 @@ class Barang extends Auth_Controller
 		$this->load->model('msa_model');
 		$this->load->model('barang_model');
 		$kode_barang = $this->keamanan->post($this->input->post('kode_barang', TRUE));
+		$id_vendor = $this->keamanan->post($this->input->post('vendor', TRUE));
 
 		$data = array(
 			'id_barang'    => $this->keamanan->post($this->input->post('id_barang', TRUE)),
 			'kode_barang'    => $kode_barang,
 			'jenis_barang'    => $this->keamanan->post($this->input->post('jenis_barang', TRUE)),
-			'id_vendor'    => $this->keamanan->post($this->input->post('vendor', TRUE)),
+			'id_vendor'    => $id_vendor,
 			'id_gudang'    => $this->keamanan->post($this->input->post('gudang', TRUE)),
 			'nama_barang'    => $this->keamanan->post($this->input->post('nama_barang', TRUE)),
 			'spesifikasi'    => $this->keamanan->post($this->input->post('spesifikasi', TRUE)),
@@ -75,7 +76,8 @@ class Barang extends Auth_Controller
 			'merk'    => $this->keamanan->post($this->input->post('merk', TRUE))
 		);
 
-		$cek_kode_barang = $this->barang_model->cek_kode($kode_barang)->result();
+		//$cek_kode_barang = $this->barang_model->cek_kode($kode_barang)->result();
+		$cek_kode_barang = $this->barang_model->cek_supplier_barang($kode_barang, $id_vendor)->result();
 
 		if (count($cek_kode_barang) == 0) {
 			//kode belum digunakan
@@ -215,6 +217,26 @@ class Barang extends Auth_Controller
 		}
 		echo json_encode($json);
 	}
+
+	public function cek_supplier_barang()
+	{
+		if ($this->input->is_ajax_request()) {
+			$kode_barang     = $this->input->post('kode_barang');
+			$id_supplier     = $this->input->post('id_supplier');
+
+			$this->load->model('barang_model');
+			$cek = $this->barang_model->cek_supplier_barang($kode_barang, $id_supplier)->result();
+
+			if (count($cek) == 0) {
+				//kode belum digunakan
+				$json['status']     = 0;
+			} else {
+				//kode dan supplier sudah digunakan
+				$json['status']     = 1;
+			}
+		}
+		echo json_encode($json);
+	}	
 
 	function messageAlert($type, $title)
 	{

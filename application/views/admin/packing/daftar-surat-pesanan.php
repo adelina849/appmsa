@@ -1,6 +1,55 @@
 <!-- Quick Stats -->
 <link href="<?php echo base_url('assets/plugins/datatables/css/jquery.dataTables.min.css') ?>" rel="stylesheet">
 
+<!-- Quick Stats -->
+<div class="row text-center">
+    <div class="col-sm-6 col-lg-4">
+        <a href="javascript:void(0)" class="widget widget-hover-effect2">
+            <div class="widget-extra themed-background">
+                <h4 class="widget-content-light"><strong>Jumlah Nilai SP</strong> Belum Packing</h4>
+            </div>
+            
+            <div class="widget-extra-full">
+                <span class="h2 themed-color animation-expandOpen">
+                    <div id="jmlSP"></div>
+                </span>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-sm-6 col-lg-4">
+        <a href="javascript:void(0)" class="widget widget-hover-effect2">
+            <div class="widget-extra themed-background">
+                <h4 class="widget-content-light"><strong>Jumlah SP</strong> Belum Packing</h4>
+            </div>
+            
+            <div class="widget-extra-full">
+                <span class="h2 themed-color animation-expandOpen">
+                    <div id="jmlBaris"></div>
+                </span>
+            </div>
+        </a>
+    </div>
+
+
+    <div class="col-sm-6 col-lg-4">
+        <a href="javascript:void(0)" class="widget widget-hover-effect2">
+            <div class="widget-extra themed-background">
+                <h4 class="widget-content-light"><strong>Total Nilai SP</strong> Belum Packing</h4>
+            </div>
+            
+            <div class="widget-extra-full">
+                <span class="h2 themed-color animation-expandOpen">
+                    <div id="totalSP"></div>
+                </span>
+            </div>
+        </a>
+    </div>
+
+</div>
+<!-- END Quick Stats -->
+
+
 <div class="block full">
     <!-- All Orders Title -->
     <div class="block-title">
@@ -55,12 +104,19 @@
                             <td class="text-light">LEMBAGA</td>
                             <td class="text-light" style="width: 10%;">JENJANG</td>
                             <td class="text-light" style="width: 10%;">STATUS</td>
-                            <td class="text-light" style="width: 10%;">NILAI (Rp.)</td>
-                            <td class="text-center no-sort text-light" style="width: 15%;"><i class="fa fa-cog"></i></td>
+                            <td class="text-light" style="width: 15%;">NILAI (Rp.)</td>
+                            <td class="text-center no-sort text-light" style="width: 20%;"><i class="fa fa-cog"></i></td>
                         </tr>
                     </thead>
                     <tbody>
                     </tbody>
+                    <tfoot align="right">
+                        <tr>
+                            <th colspan="7" class="text-right">TOTAL SP SIAP PACKING</th>
+                            <th id="jmlSP"></th>
+                            <th id="totalDisplay"></th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -235,12 +291,67 @@
             "lengthMenu": [
 				[25, 50, 100, -1],
 				[25, 50, 100, "All"],
-            ],            
+            ],  
+                     
+            "columnDefs": [
+                {
+                    "targets": 7,
+                    "className": "dt-body-right"
+                }
+            ],
+
+            "footerCallback": function ( row, data, start, end, display )
+            {
+                var api = this.api(), data;
+
+                // Remove the formatting to get integer data for summation
+                var intVal = function ( i ) {
+                    return typeof i === 'string' ?
+                        i.replace(/\./g, '').replace(/[\$,]/g, '')*1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+
+                // Total over all pages
+                data = api.column( 7 ).data();
+                total = data.length ?
+                    data.reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                    }):0;
+
+                // Total over this page
+                data = api.column( 7, { page: 'current'} ).data();
+                pageTotal = data.length ? data.reduce(function (a, b) {
+                                                        return intVal(a) + intVal(b);
+                                                    }) :0;
+                // Update footer
+                $( api.column( 7 ).footer() ).html(
+                    //'$'+pageTotal +' ( $'+ total +' total)'
+                    'Rp. '+ pageTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                );
+
+                $('#totalDisplay').text('Rp. '+ total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."));
+                // $( api.column( 8 ).footer() ).html(
+                //     //'$'+pageTotal +' ( $'+ total +' total)'
+                //     'Rp. '+ total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                // );
+
+                // Manipulasi elemen HTML dengan hasil AJAX
+                $('#jmlSP').html('Rp. '+ pageTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."));
+                $('#totalSP').html('<strong>'+'Rp. '+ total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")+'</strong>');
+                var pageInfo = this.api().page.info();
+                $('#jmlBaris').html('<strong>'+pageInfo.recordsDisplay+'</strong>');
+
+
+            }                        
         } );
+
         $('body').tooltip({
             selector: '[data-toggle="tooltip"]'
         });
+
     });
+    
 </script>         
 
 

@@ -75,7 +75,8 @@
                             $s = "SELECT 
                                     surat_jalan_detail.id AS id_detail, surat_jalan_detail.surat_jalan_id, 
                                     surat_jalan_detail.nomor_do, surat_jalan_detail.id_lembaga, surat_jalan_detail.status_kirim,
-                                    surat_jalan_master.nomor AS nomor_surat_jalan
+                                    surat_jalan_master.nomor AS nomor_surat_jalan,
+                                    surat_jalan_detail.date_status AS date_status
                                 FROM surat_jalan_detail, surat_jalan_master
                                 WHERE surat_jalan_detail.surat_jalan_id=surat_jalan_master.id
                                 ORDER BY surat_jalan_master.tanggal DESC";
@@ -91,8 +92,9 @@
                                 $qDo = $this->db->get_where('packing_do', array('nomor_do' => $d->nomor_do))->result();
                                 $qoli = (isset($qDo[0]->jumlah_qoli) ? $qDo[0]->jumlah_qoli : '-');
                                 $ikat = (isset($qDo[0]->jumlah_ikat) ? $qDo[0]->jumlah_ikat : '-');
+                                $tanggal_do = (isset($qDo[0]->tanggal) ? $qDo[0]->tanggal : 'null');
                                 //$sj = $this->db->get_where('surat_jalan_master', array('id' => $d->surat_jalan_id))->result();
-
+                                //$Qtanggal_do =$this->db->get_where('packing_do', array('nomor_do' => $nomor_do))->result();
 
                             ?>
                                 <tr>
@@ -102,7 +104,26 @@
                                     <td><?=$nama_lembaga;?></td>
                                     <td class="text-center"><?=$qoli;?></td>
                                     <td class="text-center"><?=$ikat;?></td>
-                                    <td class="text-center"><?='0 Hari';?></td>
+                                    <td class="text-center">
+                                        <?php
+                                            // $awal  = date_create($d->date_status);
+                                            // $akhir = date_create(); // waktu sekarang
+                                            // $diff  = date_diff($awal, $akhir);
+                                            // $tahun = $diff->y;
+                                            // $bulan = $diff->m;
+                                            // $hari = $diff->days;
+                                            // echo $hari.' ';
+                                            if($d->status_kirim == 1 and $d->date_status != null){
+                                                // $now = time(); // or your date as well
+                                                $date_status = strtotime($d->date_status); // or your date as well
+                                                $date_do = strtotime($tanggal_do);
+                                                $datediff = $date_status - $date_do;
+                                                
+                                                echo round($datediff / (60 * 60 * 24)).' Hari';          
+                                                    
+                                            }
+                                        ?>
+                                    </td>
                                     <td class="text-center">
                                         <?php
                                             #status DO: 0 = BELUM KEMBALI

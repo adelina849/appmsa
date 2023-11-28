@@ -62,7 +62,7 @@ class Packing extends Auth_Controller
         $sp_bulan_ini = $this->input->post('sp_bulanini');
         $tAwal = $this->input->post('tAwal');
         $tAkhir = $this->input->post('tAkhir');
-
+        
         //$sp_bulan_ini = $_POST['sp_bulanini'];
         if (!empty($sp_bulan_ini)) {
             #tampilkan bulan aktif kalo tidak ada filter
@@ -105,7 +105,9 @@ class Packing extends Auth_Controller
 		$result = array();
 		$result['total'] = $q->num_rows();
 		$row = array();	
+
 		foreach($q->result() as $data) {	
+            $tersedia = 'text-muted';
             $qPelanggan = $this->db->get_where('pelanggan', array('id' => $data->id_pelanggan))->result();
             $qLembaga = $this->db->get_where('lembaga', array('id' => $data->id_lembaga))->result();
 
@@ -126,24 +128,75 @@ class Packing extends Auth_Controller
             $sisaQty = ($data->total_qty_sp - $totalQtyDo);
 
             if($sisaQty > 0){
+                //informasi pada tombol packing jika stock barang tersedia
+
+                $detail_barang = $this->db->get_where('pesanan_detail', array('id_pesanan_m' => $data->id_pesanan_m))->result();
+                $barang_tersedia = '';
+                $qty_sp = 0;
+
+                foreach($detail_barang as $d){
+                    //$data_barang .= ' '.$d->id_barang;
+                    $qty_sp = $d->jumlah_beli;
+                    $data_stok = $this->db->query("select total_stok from barang where id_barang='".$d->id_barang."' and total_stok > 0")->num_rows();
+
+
+                    #ambil jumlah qty barang yang dipesan sudah terpacking
+                    $Qdetail_terpacking = $this->pesanan->count_qty_terpacking( $data->id_pesanan_m, $d->id_barang)->row();
+                    $qty_terpacking = (isset($Qdetail_terpacking->total_qty_terpacking) ? $Qdetail_terpacking->total_qty_terpacking : 0);
+                    $qty_sebelum_packing = ($qty_sp - $qty_terpacking);
+
+
+                    $stok_barang = $data_stok;
+                    $qty = ($qty_sp - $qty_terpacking);
+
+                    #kalo jumlah pesanan melebihi stok digudang
+                    #maka sisanya akan jadi SO
+                    if ($qty > $stok_barang) {
+                        $qty_tersedia = $stok_barang;
+                        $sisa = $qty - $qty_tersedia;
+                    } else {
+                        $qty_tersedia = $qty;
+                    }
+
+                  
+                    if($qty_tersedia > 0){
+                        //$barang_tersedia .= ' tersedia';
+                        $tersedia = 'text-info';
+                    }
+                }
+
+                $jumlah_do =$this->pesanan->count_do($data->id_pesanan_m);
+                if($jumlah_do->total_do > 0){
+                    $span_class = '';
+                    $class_badge= 'themed-border-muted themed-background-muted';
+                }
+                else{
+                    $span_class = '"badge themed-border-autumn themed-background-autumn" style="font-size: 1em; font-weight: bold;"';
+                    $class_badge = 'themed-border-autumn themed-background-autumn';
+                }
+
                 $row[] = array(
                     'no'=> '<div class="text-center">'.$no.'</div>',
-                    'nomor_sp'=>'<span>' . $data->nomor_sp . '</span>',
-                    'jenis_sp'=>'<span>' . strtoupper($data->jenis_sp) . '</span>',
-                    'pelanggan'=>'<span>' . strtoupper(isset($qPelanggan[0]->nama_pelanggan) ? $qPelanggan[0]->nama_pelanggan : '-') . '</span>',
-                    'lembaga'=>'<span>' . strtoupper(isset($qLembaga[0]->nama_lembaga) ? $qLembaga[0]->nama_lembaga : '-') . '</span>',
-                    'status'=>'<span>' . strtoupper(isset($qLembaga[0]->satus) ? $qLembaga[0]->satus : '-') . '</span>',
-                    'jenjang'=>'<span>' . strtoupper(isset($qLembaga[0]->jenjang) ? $qLembaga[0]->jenjang : '-') . '</span>',
-                    'nilai_sp'=>'<div class="text-right">' . str_replace(',', '.', number_format($data->grand_total)) . '</div>',
+                    'nomor_sp'=>'<span class="'.$span_class.'">' . $data->nomor_sp . '</span>',
+                    'jenis_sp'=>'<span class="'.$span_class.'">'  . strtoupper($data->jenis_sp) . '</span>',
+                    'pelanggan'=>'<span class="'.$span_class.'">' . strtoupper(isset($qPelanggan[0]->nama_pelanggan) ? $qPelanggan[0]->nama_pelanggan : '-') . '</span>',
+                    'lembaga'=>'<span class="'.$span_class.'">' . strtoupper(isset($qLembaga[0]->nama_lembaga) ? $qLembaga[0]->nama_lembaga : '-') . '</span>',
+                    'status'=>'<span class="'.$span_class.'">' . strtoupper(isset($qLembaga[0]->satus) ? $qLembaga[0]->satus : '-') . '</span>',
+                    'jenjang'=>'<span class="'.$span_class.'">' . strtoupper(isset($qLembaga[0]->jenjang) ? $qLembaga[0]->jenjang : '-') . '</span>',
+                    'nilai_sp'=>str_replace(',', '.', number_format($data->grand_total)),
                     'aksi'=>'<div class="text-center">
                                 <div class="btn-group btn-group-sm ">
+                                    <a href="#" data-toggle="tooltip" title="Jumlah Terpacking" 
+                                        class="btn btn-alt btn-xs btn-default">
+                                        <span class="badge '.$class_badge.'">'.$jumlah_do->total_do.'</span>
+                                    </a>
                                     <a href="' . site_url('admin/packing/form_packing/' . $data->id_pesanan_m . '/barang') . '" data-toggle="tooltip" title="Form Packing Barang" 
-                                        class="btn btn-alt btn-xs btn-default text-info">
-                                        <i class="gi gi-package text-info"></i> Packing
+                                        class="btn btn-alt btn-xs btn-default '.$tersedia.'">
+                                        <i class="gi gi-package '.$tersedia.'"></i> Packing
                                     </a>
                                     <a href="javascript:void(0)" data-toggle="tooltip" title="Cetak Surat Pesanan" 
                                         class="btn btn-alt btn-xs btn-default cetak" onclick="form_cektak(' . "'" . $data->id_pesanan_m . "'" . ')">
-                                        <i class="fa fa-file-pdf-o text-danger"></i>
+                                        <i class="fa fa-file-pdf-o text-muted"></i>
                                     </a>
 
                                 </div>
@@ -155,8 +208,20 @@ class Packing extends Auth_Controller
 		
 		$result = array('aaData'=>$row);
 		echo json_encode($result);
+        //$this->cek(5);
 		
 	}
+
+    public function cek($a){
+        $response = array();
+        $posts = array();
+        $posts[] = array(
+            "total"    => $a	
+        );
+        $response['posts'] = $posts; 
+        echo json_encode($response,TRUE);
+
+    }
 
     public function ajax_list_pesanan()
     {
@@ -305,13 +370,15 @@ class Packing extends Auth_Controller
 
                 if ($this->db->affected_rows() > 0) {
                     $sisa_belum_terpacking = $this->input->post('sisa_val');
+                    $qty_tersedia = $this->input->post('tersedia');
 
                     $i = 1;
                     foreach ($this->input->post('id_barang') as $idx => $val) :
                         $index = $idx;
                         $id_barang   = $val;
                         $qty_unpacking = (isset($sisa_belum_terpacking[$index]) ? $sisa_belum_terpacking[$index] : '0');
-                        $qty_terpacking = $this->input->post('tersedia' . $i);
+                        $qty_terpacking = (isset($qty_tersedia[$index]) ? $qty_tersedia[$index] : '0');
+                        //$qty_terpacking = $this->input->post('tersedia' . $i);
 
                         $data_detail_packing = array(
                             'id_packing_m'  => $lastid_packing_m,

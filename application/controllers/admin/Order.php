@@ -115,7 +115,7 @@ class Order extends Auth_Controller
 		$s = "SELECT 
                     a.nomor_do,
                     b.id_packing_m, b.nomor_packing, b.tanggal_packing,
-                    c.id_pesanan_m, c.nomor_sp, c.id_lembaga, c.id_pelanggan, c.id_mitra, c.grand_total, c.sisa_bayar
+                    c.id_pesanan_m, c.nomor_sp, c.id_lembaga, c.id_pelanggan, c.id_mitra, c.grand_total, c.sisa_bayar, c.sistem_pembayaran
                 FROM packing_do AS a
                 INNER JOIN packing_master AS b
                 ON a.id_packing_m=b.id_packing_m
@@ -153,6 +153,7 @@ class Order extends Auth_Controller
                 'pelanggan'=>'<span>' . strtoupper(isset($qPelanggan[0]->nama_pelanggan) ? $qPelanggan[0]->nama_pelanggan : '-') . '</span>',
                 'lembaga'=>'<span>' . strtoupper(isset($qLembaga[0]->nama_lembaga) ? $qLembaga[0]->nama_lembaga : '-') . '</span>',
                 'status'=>'<span>' . strtoupper(isset($qLembaga[0]->satus) ? $qLembaga[0]->satus : '-') . '</span>',
+                'pembayaran'=>'<span>' . strtoupper($data->sistem_pembayaran) . '</span>',
                 'jenjang'=>'<span>' . strtoupper(isset($qLembaga[0]->jenjang) ? $qLembaga[0]->jenjang : '-') . '</span>',
                 'nilai_do'=>'<div class="text-right">' . str_replace(',', '.', number_format($nilai_do)) . '</div>',
                 'nilai_sp'=>'<div class="text-right">' . str_replace(',', '.', number_format($data->grand_total)) . '</div>',
@@ -305,6 +306,11 @@ class Order extends Auth_Controller
             'id_packing_m' => $id_packing_m,
             'title'         => 'FORM PACKING BARANG'
         );
+
+        #KALO PERNAH DI CETAK update cetak = 1
+        $flag = array('cetak' => 1);
+        $this->db->where('id_packing_m', $id_packing_m);
+        $this->db->update('packing_master', $flag);
 
         $this->load->view('admin/print/print-packing-barang', $data);
     }

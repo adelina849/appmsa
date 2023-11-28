@@ -343,6 +343,7 @@
                             </td>
 
                             <td>
+                                <input type='hidden' name='id_vendor[]' value='<?=$barang[0]->id_vendor;?>'>
                                 <a href='#' class='' id='HapusBaris'><i class='fa fa-times btn-xs' style='color:red;'></i></a>
                             </td>
 
@@ -593,7 +594,7 @@
         Baris += "<span></span>";
         Baris += "</td>";
 
-        Baris += "<td><a href='#' class='' id='HapusBaris'><i class='fa fa-times btn-xs' style='color:red;'></i></a></td>";
+        Baris += "<td><input type='hidden' name='id_vendor[]'><a href='#' class='' id='HapusBaris'><i class='fa fa-times btn-xs' style='color:red;'></i></a></td>";
 
         Baris += "</tr>";
 
@@ -637,6 +638,7 @@
                 var Harganya = Field.find('div#hasil_pencarian li.autocomplete_active span#harganya').html();
                 var Speknya = Field.find('div#hasil_pencarian li.autocomplete_active span#speknya').html();
                 var Satuannya = Field.find('div#hasil_pencarian li.autocomplete_active span#satuannya').html();
+                var IdVendor = Field.find('div#hasil_pencarian li.autocomplete_active span#id_vendor').html();
 
                 Field.find('div#hasil_pencarian').hide();
                 Field.find('input').val(Kodenya);
@@ -665,6 +667,7 @@
                 $('#TabelTransaksi tbody tr:eq(' + $(this).parent().parent().index() + ') td:nth-child(14) input').val(Harganya);
                 $('#TabelTransaksi tbody tr:eq(' + $(this).parent().parent().index() + ') td:nth-child(14) span').html(to_rupiah(Harganya));
 
+                $('#TabelTransaksi tbody tr:eq(' + $(this).parent().parent().index() + ') td:nth-child(15) input').val(IdVendor);
 
                 var IndexIni = $(this).parent().parent().index() + 1;
                 var TotalIndex = $('#TabelTransaksi tbody tr').length;
@@ -822,6 +825,9 @@
                         $('#TabelTransaksi tbody tr:eq(' + Indexnya + ') td:nth-child(13) input').removeAttr('disabled').val(0);
                         $('#TabelTransaksi tbody tr:eq(' + Indexnya + ') td:nth-child(14) input').val('');
                         $('#TabelTransaksi tbody tr:eq(' + Indexnya + ') td:nth-child(14) span').html('');
+
+                        //id supplier
+                        $('#TabelTransaksi tbody tr:eq(' + Indexnya + ') td:nth-child(15) input').val('');
                         
                     }
                 }
@@ -840,6 +846,7 @@
         var Harganya = $(this).find('span#harganya').html();
         var Speknya = $(this).find('span#speknya').html();
         var Satuannya = $(this).find('span#satuannya').html();
+        var IdVendor = $(this).find('span#id_vendor').html();
 
         $('#TabelTransaksi tbody tr:eq(' + Indexnya + ') td:nth-child(2)').find('div#hasil_pencarian').hide();
         $('#TabelTransaksi tbody tr:eq(' + Indexnya + ') td:nth-child(3)').html(NamaBarang);
@@ -864,6 +871,10 @@
         $('#TabelTransaksi tbody tr:eq(' + Indexnya + ') td:nth-child(13) input').removeAttr('disabled').val(0);
         $('#TabelTransaksi tbody tr:eq(' + Indexnya + ') td:nth-child(14) input').val(Harganya);
         $('#TabelTransaksi tbody tr:eq(' + Indexnya + ') td:nth-child(14) span').html(to_rupiah(Harganya));
+
+        //set id supplier
+        $('#TabelTransaksi tbody tr:eq(' + Indexnya + ') td:nth-child(15) input').val(IdVendor);
+
 
         var IndexIni = Indexnya + 1;
         var TotalIndex = $('#TabelTransaksi tbody tr').length;

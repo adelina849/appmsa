@@ -2,7 +2,6 @@
 
 class Surat_jalan extends Auth_Controller
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -506,12 +505,12 @@ class Surat_jalan extends Auth_Controller
 	{
 		$id = $this->keamanan->post($this->input->post('id_detail'));
 		$id_status = $this->keamanan->post($this->input->post('id_status'));
-		
+		$date_status = date('Y-m-d');
 		$data = array(
 			'status_kirim' => $id_status,
+			'date_status' => $date_status
 		);
 		$this->msa->update('surat_jalan_detail', 'id', $id, $data);
-
 
 		if ($this->db->affected_rows() > 0) {
 			$this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Status Pengiriman Berhasil Diperbaharui'));

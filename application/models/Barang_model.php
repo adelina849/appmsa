@@ -70,7 +70,7 @@ class Barang_model extends CI_Model
 		$sql = "
 			SELECT 
                 `id_barang`,`kode_barang`, `nama_barang`, `spesifikasi`,  `satuan`
-                , `harga_jual`, `harga_beli`
+                , `harga_jual`, `harga_beli`, `id_vendor`, `total_stok`
 			FROM 
 				`barang` 
 			WHERE 
@@ -80,7 +80,7 @@ class Barang_model extends CI_Model
 					`kode_barang` LIKE '%" . $this->db->escape_like_str($keyword) . "%' 
 					OR `nama_barang` LIKE '%" . $this->db->escape_like_str($keyword) . "%' 
 				) 
-				" . $not_in . " 
+				" . $not_in . "ORDER BY total_stok DESC"." 
 		";
 		return $this->db->query($sql);
 	}
@@ -118,6 +118,17 @@ class Barang_model extends CI_Model
 		";
 		return $this->db->query($sql);
 	}
+
+	function get_id_bysupplier($kode_barang, $id_vendor)
+	{
+		return $this->db
+			->select('id_barang, nama_barang')
+			->where('kode_barang', $kode_barang)
+			->where('id_vendor', $id_vendor)
+			->where('dihapus', 'tidak')
+			->limit(1)
+			->get('barang');
+	}	
 	function get_id($kode_barang)
 	{
 		return $this->db
@@ -167,6 +178,19 @@ class Barang_model extends CI_Model
 			->limit(1)
 			->get('barang');
 	}
+
+	#satu barang bisa banyak kode asal supplier beda
+	function cek_supplier_barang($kode_barang, $id_supplier)
+	{
+		return $this->db
+			->select('id_barang')
+			->where('kode_barang', $kode_barang)
+			->where('id_vendor', $id_supplier)
+			->where('dihapus', 'tidak')
+			->limit(1)
+			->get('barang');
+	}
+
 
 
 	#SERVER SIDE DATA TABLE

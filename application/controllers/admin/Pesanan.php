@@ -39,14 +39,24 @@ class Pesanan extends Auth_Controller
 				$json['status']     = 1;
 				$json['datanya']     = "<ul id='daftar-autocomplete'>";
 				foreach ($barang->result() as $b) {
+					$qSupplier = $this->db->get_where('vendor', array('id' => $b->id_vendor))->result();
+					$supplier = (isset($qSupplier[0]->nama_vendor) ? $qSupplier[0]->nama_vendor : '');
+
 					$json['datanya'] .= "
 						<li>
 							<b>Kode</b> : 
 							<span id='kodenya'>" . $b->kode_barang . "</span> <br />
 							<span id='barangnya'>" . $b->nama_barang . "</span> <br />
-                            <b>Spesifikasi</b> :
+                            <b>Supplier</b> :
+							<span id='id_vendor' style='display:none;'>" . $b->id_vendor . "</span>
+							<span id='vendor'>" . $supplier . "</span> <br />
+							<b>Stok Tersedia</b> :
+							<span id='total_stok'>" . $b->total_stok . "</span> <br />
+	
+							<b>Spesifikasi</b> :
                             <span id='speknya'>" . $b->spesifikasi . "</span> <br />
-                            <b>Satuan</b> :
+
+							<b>Satuan</b> :
                             <span id='satuannya'>" . $b->satuan . "</span> <br />
                             <span id='harganya' style='display:none;'>" . $b->harga_jual . "</span>
 						</li>
@@ -204,6 +214,7 @@ class Pesanan extends Auth_Controller
 			$row[] = '<span>' . $pesanan->nomor_sp . '</span>';
 			$row[] = '<span>' . $this->tanggal->konversi($pesanan->tanggal_sp) . '</span>';
 			$row[] = '<span>' . strtoupper($pesanan->jenis_sp) . '</span>';
+			$row[] = '<span>' . strtoupper($pesanan->sistem_pembayaran) . '</span>';
 			$row[] = '<span>' . strtoupper(isset($qLembaga[0]->nama_lembaga) ? $qLembaga[0]->nama_lembaga : '-') . '</span>';
 			$row[] = '<span>' . strtoupper(isset($qPelanggan[0]->nama_pelanggan) ? $qPelanggan[0]->nama_pelanggan : '-') . '</span>';
 			$row[] = '<div class="text-right">' . str_replace(',', '.', number_format($pesanan->grand_total)) . '</div>';
@@ -436,23 +447,6 @@ class Pesanan extends Auth_Controller
 									'id_user' => $id_kasir,
 								);
 
-								// insert sebagai piutang
-								// if ($SisaBayarHidden > 0) {
-								// 	$data_piutang = array(
-								// 		'nomor_sp'      => $nomor_sp,
-								// 		'tanggal_sp'    => $tanggal_pesanan,
-								// 		'jatuh_tempo' => $tanggal_jatuh_tempo,
-								// 		'id_lembaga' => $id_lembaga,
-								// 		'id_pelanggan' => $id_pelanggan,
-								// 		'id_mitra' => $id_mitra,
-								// 		'id_pelaksana' => $cv_pelaksana,
-								// 		'nominal' => $SisaBayarHidden,
-								// 		'status' => 'belum lunas'
-								// 	);
-								// 	$this->msa->insert('piutang', $data_piutang);
-								// }
-								//selesai insert sebagai piutang
-
 								$master = $this->transaksi_model->insert_master($data_master);
 
 								#return last id inserted
@@ -464,7 +458,10 @@ class Pesanan extends Auth_Controller
 									foreach ($_POST['kode_barang'] as $k) {
 										if (!empty($k)) {
 											$kode_barang    = $_POST['kode_barang'][$no_array];
-											$id_barang      = $this->barang_model->get_id($kode_barang)->row()->id_barang;
+											$id_vendor    	= $_POST['id_vendor'][$no_array];
+											//$id_barang      = $this->barang_model->get_id($kode_barang)->row()->id_barang;
+											$id_barang      = $this->barang_model->get_id_bysupplier($kode_barang, $id_vendor)->row()->id_barang;
+											
 											$jumlah_beli    = $_POST['jumlah_beli'][$no_array];
 
 											$data_barang = array(
@@ -751,7 +748,10 @@ class Pesanan extends Auth_Controller
 									foreach ($_POST['kode_barang'] as $k) {
 										if (!empty($k)) {
 											$kode_barang    = $_POST['kode_barang'][$no_array];
-											$id_barang      = $this->barang_model->get_id($kode_barang)->row()->id_barang;
+											$id_vendor    	= $_POST['id_vendor'][$no_array];
+
+											//$id_barang      = $this->barang_model->get_id($kode_barang)->row()->id_barang;
+											$id_barang      = $this->barang_model->get_id_bysupplier($kode_barang, $id_vendor)->row()->id_barang;
 											$jumlah_beli    = $_POST['jumlah_beli'][$no_array];
 
 											$data_barang = array(
@@ -987,7 +987,11 @@ class Pesanan extends Auth_Controller
 								foreach ($_POST['kode_barang'] as $k) {
 									if (!empty($k)) {
 										$kode_barang    = $_POST['kode_barang'][$no_array];
-										$id_barang      = $this->barang_model->get_id($kode_barang)->row()->id_barang;
+										$id_vendor    	= $_POST['id_vendor'][$no_array];
+
+										//$id_barang      = $this->barang_model->get_id($kode_barang)->row()->id_barang;
+										$id_barang      = $this->barang_model->get_id_bysupplier($kode_barang, $id_vendor)->row()->id_barang;
+										// $id_barang      = $this->barang_model->get_id($kode_barang)->row()->id_barang;
 										$jumlah_beli    = $_POST['jumlah_beli'][$no_array];
 
 										$data_barang = array(
@@ -1227,7 +1231,10 @@ class Pesanan extends Auth_Controller
 								foreach ($_POST['kode_barang'] as $k) {
 									if (!empty($k)) {
 										$kode_barang    = $_POST['kode_barang'][$no_array];
-										$id_barang      = $this->barang_model->get_id($kode_barang)->row()->id_barang;
+										$id_vendor    	= $_POST['id_vendor'][$no_array];
+										//$id_barang      = $this->barang_model->get_id($kode_barang)->row()->id_barang;
+										$id_barang      = $this->barang_model->get_id_bysupplier($kode_barang, $id_vendor)->row()->id_barang;
+																			
 										$jumlah_beli    = $_POST['jumlah_beli'][$no_array];
 
 										$data_barang = array(

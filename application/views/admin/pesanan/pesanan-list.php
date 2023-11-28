@@ -67,6 +67,7 @@
                             <td class="text-light" style="width: 10%;">NOMOR SP</td>
                             <td class="text-light" style="width: 12%;">TANGGAL</td>
                             <td class="text-light" style="width: 10%;">JENIS SP</td>
+                            <td class="text-light" style="width: 10%;">PEMBAYARAN</td>
                             <td class="text-light">NAMA LEMBAGA</td>
                             <td class="text-light">NAMA PELANGGAN</td>
                             <td class="text-light" style="width: 10%;">TOTAL SP (Rp.)</td>

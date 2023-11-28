@@ -77,19 +77,29 @@ class Penerimaan extends Auth_Controller
 		$row = array();
         
 		foreach($q->result() as $data) {	
-
+			$jatuh_tempo='';
 			$pembelian = $this->db->get_where('pembelian_master', array('id_pembelian_m' => $data->id_pembelian_m))->result();
 			$id_supplier = (isset($pembelian[0]->id_supplier) ? $pembelian[0]->id_supplier : '0');
 
 			$supplier = $this->db->get_where('vendor', array('id' => $id_supplier))->result();
 			//$marketing = $this->db->get_where('marketing_supplier', array('id' => $data->id_marketing))->result();
 
+			if(isset($pembelian[0]->nomor_spb)){
+				if($pembelian[0]->jatuh_tempo!='0000-00-00'){
+					$jatuh_tempo = (isset($pembelian[0]->jatuh_tempo) ? $pembelian[0]->jatuh_tempo : '-');
+				}else{
+					$jatuh_tempo='-';
+				}
+			}
+
             $row[] = array(
                 'no'=> '<div class="text-center">'.$no.'</div>',
                 'nomor'=>'<span>' . $data->nomor_penerimaan . '</span>',
                 'nomor_pembelian'=>'<span>' . (isset($pembelian[0]->nomor_spb) ? $pembelian[0]->nomor_spb : '-'). '</span>',
                 'supplier'=>'<span>' . strtoupper(isset($supplier[0]->nama_vendor) ? $supplier[0]->nama_vendor : '-'). '</span>',
-                'total'=>'<span>' . str_replace(',', '.', number_format($data->netto_bayar)). '</span>',
+                'sistem_pembayaran'=>'<span>' . strtoupper(isset($pembelian[0]->sistem_pembayaran) ? $pembelian[0]->sistem_pembayaran : '-'). '</span>',
+                'jatuh_tempo'=>'<span>' . $jatuh_tempo. '</span>',
+                'total'=>'<div class="text-right"><span>' . str_replace(',', '.', number_format($data->netto_bayar)). '</span></div>',
                 'aksi'=>'<div class="text-center">
                             <div class="btn-group btn-group-sm">
                                 <a href="' . site_url('admin/penerimaan/detail_penerimaan/' . $data->id_penerimaan_m. '/barang') . '" data-toggle="tooltip" title="detail barang yang diterima" 

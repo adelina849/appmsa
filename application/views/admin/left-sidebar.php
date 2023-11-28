@@ -181,7 +181,7 @@
 						<ul>
 							<li><?= anchor('admin/penerimaan/pembelian', 'Daftar Pembelian'); ?></li>
 							<li><?= anchor('admin/penerimaan/daftar', 'Daftar Penerimaan'); ?></li>
-							<li><?= anchor('admin/gudang/barang_masuk', 'Penerimaan Retur Pembelian', array('class' => '')); ?></li>
+							<li><?= anchor('admin/gudang/barang_masuk', 'Penerimaan Lain-Lain', array('class' => '')); ?></li>
 						</ul>
 					</li>
 					
